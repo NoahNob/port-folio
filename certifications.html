@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certifications - Noah Noblet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .certification-card {
+            background: linear-gradient(145deg, rgba(15, 12, 41, 0.8), rgba(48, 43, 99, 0.5));
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .certification-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+        }
+
+        .pdf-viewer {
+            height: 500px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pdf-viewer::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, 
+                transparent 50%, 
+                rgba(255,255,255,0.02) 100%);
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #8B5CF6 30%, #6366F1 70%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 20%, 
+                rgba(255,255,255,0.1) 50%, 
+                transparent 80%);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-[#0f0c29] text-gray-100 min-h-screen font-sans">
+    <!-- Navigation -->
+    <nav class="cosmic-nav fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="index.html" class="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                NN
+            </a>
+            <div class="flex space-x-0 overflow-hidden rounded-full bg-gray-800/50 backdrop-blur-lg border border-white/10">
+                <a href="index.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-l-full">
+                    <span class="relative z-10">Accueil</span>
+                    <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </a>
+                <a href="projects.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
+                    <span class="relative z-10">Projets</span>
+                    <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </a>
+                <a href="skills.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
+                    <span class="relative z-10">Compétences</span>
+                    <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </a>
+                <a href="cv.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
+                    <span class="relative z-10">CV</span>
+                    <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </a>
+                <a href="certifications.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-r-full">
+                    <span class="relative z-10">Certifications</span>
+                    <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 pt-32 pb-16">
+        <div class="max-w-6xl mx-auto">
+            <!-- En-tête -->
+            <div class="text-center mb-16">
+                <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                    Mes Certifications
+                </h1>
+                <p class="text-gray-400 max-w-xl mx-auto">
+                    Validation de mes compétences techniques à travers diverses certifications
+                </p>
+            </div>
+
+            <!-- Grille de certifications -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Certification 1 -->
+                <div class="certification-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold">AWS Certified Developer</h2>
+                        <span class="text-sm text-purple-400">2024</span>
+                    </div>
+                    
+                    <div class="pdf-viewer mb-6">
+                        <embed src="assets/certifications/aws-certified-developer.pdf#toolbar=0&navpanes=0" 
+                               type="application/pdf" 
+                               width="100%" 
+                               height="100%" />
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-400">Émise par Amazon Web Services</span>
+                        <a href="assets/certifications/aws-certified-developer.pdf" download 
+                           class="download-btn px-4 py-2 rounded-lg text-sm text-white hover:scale-105 transition-transform">
+                           <span class="relative z-10">Télécharger</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Certification 2 -->
+                <div class="certification-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold">Google Cloud Professional</h2>
+                        <span class="text-sm text-purple-400">2023</span>
+                    </div>
+                    
+                    <div class="pdf-viewer mb-6">
+                        <embed src="assets/certifications/google-cloud-professional.pdf#toolbar=0&navpanes=0" 
+                               type="application/pdf" 
+                               width="100%" 
+                               height="100%" />
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-400">Émise par Google Cloud</span>
+                        <a href="assets/certifications/google-cloud-professional.pdf" download 
+                           class="download-btn px-4 py-2 rounded-lg text-sm text-white hover:scale-105 transition-transform">
+                           <span class="relative z-10">Télécharger</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Ajouter 3 autres certifications suivant le même modèle -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Animation au scroll
+        document.querySelectorAll('.certification-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                anime({
+                    targets: card,
+                    opacity: 1,
+                    translateY: 0,
+                    delay: index * 100,
+                    duration: 800,
+                    easing: 'easeOutExpo'
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>

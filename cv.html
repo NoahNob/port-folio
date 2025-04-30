@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Noah Noblet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .pdf-container {
+            height: calc(100vh - 160px);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .download-btn {
+            background: linear-gradient(45deg, #8B5CF6, #6366F1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 20%, 
+                rgba(255, 255, 255, 0.1) 50%, 
+                transparent 80%);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-[#0f0c29] text-gray-100 min-h-screen">
+        <!-- Navigation -->
+        <nav class="cosmic-nav fixed w-full top-0 z-50">
+            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                <a href="index.html" class="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                    NN
+                </a>
+                <div class="flex space-x-0 overflow-hidden rounded-full bg-gray-800/50 backdrop-blur-lg border border-white/10">
+                    <a href="index.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-l-full">
+                        <span class="relative z-10">Accueil</span>
+                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    <a href="projects.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
+                        <span class="relative z-10">Projets</span>
+                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    <a href="skills.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
+                        <span class="relative z-10">Compétences</span>
+                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    <a href="cv.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
+                        <span class="relative z-10">CV</span>
+                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    <a href="certifications.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-r-full">
+                        <span class="relative z-10">Certifications</span>
+                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+    <main class="container mx-auto px-4 pt-24">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold">Mon Curriculum Vitae</h1>
+                <a href="assets/documents/cv.pdf" download 
+                   class="download-btn px-6 py-3 rounded-lg text-white font-medium hover:scale-105 transition-transform">
+                   <span class="relative z-10">📄 Télécharger</span>
+                </a>
+            </div>
+
+            <div class="pdf-container">
+                <embed src="assets/documents/cv.pdf#toolbar=0&navpanes=0" 
+                       type="application/pdf" 
+                       width="100%" 
+                       height="100%" />
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Animation au survol du bouton
+        document.querySelector('.download-btn').addEventListener('mouseenter', function() {
+            anime({
+                targets: this,
+                scale: 1.05,
+                duration: 300,
+                easing: 'easeOutExpo'
+            });
+        });
+
+        document.querySelector('.download-btn').addEventListener('mouseleave', function() {
+            anime({
+                targets: this,
+                scale: 1,
+                duration: 200,
+                easing: 'easeOutExpo'
+            });
+        });
+    </script>
+</body>
+</html>

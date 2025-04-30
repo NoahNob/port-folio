@@ -1,0 +1,62 @@
+/* certifications.css */
+.certification-card {
+    background: linear-gradient(145deg, rgba(15, 12, 41, 0.8), rgba(48, 43, 99, 0.5));
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.certification-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+}
+
+.pdf-viewer {
+    height: 500px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.pdf-viewer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, 
+        transparent 50%, 
+        rgba(255,255,255,0.02) 100%);
+}
+
+.download-btn {
+    background: linear-gradient(45deg, var(--cosmic-purple) 30%, var(--cyber-blue) 70%);
+    position: relative;
+    overflow: hidden;
+}
+
+.download-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+        transparent 20%, 
+        rgba(255,255,255,0.1) 50%, 
+        transparent 80%);
+    animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.certification-badge {
+    width: 60px;
+    height: 60px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}

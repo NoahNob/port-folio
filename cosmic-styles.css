@@ -1,0 +1,55 @@
+/* cosmic-styles.css */
+:root {
+    --cosmic-purple: #8B5CF6;
+    --cosmic-blue: #6366F1;
+    --cosmic-bg: linear-gradient(45deg, #0f0c29, #1a1a2e);
+}
+
+@keyframes cosmic-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes cosmic-glow {
+    0%, 100% { filter: drop-shadow(0 0 10px var(--cosmic-purple)); }
+    50% { filter: drop-shadow(0 0 20px var(--cosmic-blue)); }
+}
+
+.cosmic-nav {
+    background: rgba(15, 12, 41, 0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.cosmic-card {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cosmic-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+}
+
+.cosmic-trail {
+    background: radial-gradient(circle at center, 
+        rgba(139, 92, 246, 0.2) 0%,
+        rgba(59, 130, 246, 0.1) 70%,
+        transparent 100%);
+    mix-blend-mode: screen;
+    filter: blur(30px);
+}
+
+.cosmic-trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    mix-blend-mode: screen;
+}
+
+.canvas-glows {
+    filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
+}
