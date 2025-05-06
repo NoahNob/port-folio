@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veille Technologique - Noah Noblet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="js/global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .veille-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .veille-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #8B5CF6, #EC4899);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .veille-card:hover::before {
+            opacity: 1;
+        }
+
+        .veille-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(139, 92, 246, 0.2);
+        }
+
+        .source-badge {
+            background: linear-gradient(45deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border-radius: 9999px;
+            padding: 4px 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #D8B4FE;
+        }
+
+        .rss-error, .rss-loading {
+            background: rgba(220, 38, 38, 0.15);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #FECACA;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .rss-loading {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #E9D5FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top: 3px solid #8B5CF6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .retry-btn {
+            background: linear-gradient(45deg, #8B5CF6, #EC4899);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .retry-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+        }
+
+        .section-title {
+            background: linear-gradient(90deg, #8B5CF6, #EC4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .tool-card {
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-[#0f172a] text-gray-100 min-h-screen">
+    <div id="nav-placeholder"></div>
+    <div class="container mx-auto px-4 max-w-7xl pt-32 pb-20">
+        <h1 class="text-5xl md:text-6xl font-bold text-center mb-12 section-title">
+            Veille Technologique
+        </h1>
+
+        <div class="mb-16 max-w-3xl mx-auto text-center">
+            <p class="text-lg md:text-xl text-gray-300 leading-relaxed">
+                Exploration des dernières innovations et tendances dans le développement web, mobile et l'intelligence artificielle, pour rester à la pointe de la technologie.
+            </p>
+        </div>
+
+        <section class="mb-20">
+            <h2 class="text-3xl md:text-4xl font-bold mb-10 section-title">Dernières Actualités IA & Tech</h2>
+            <div id="rss-feed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <p class="rss-loading col-span-full">
+                    <span class="spinner"></span>
+                    Chargement des actualités...
+                </p>
+            </div>
+        </section>
+        <section class="mb-20">
+            <h2 class="text-3xl md:text-4xl font-bold mb-10 section-title">Articles Sélectionnés</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <a href="https://medium.com/" target="_blank" class="veille-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="source-badge">Medium</span>
+                        <span class="text-sm text-gray-400">15 mars 2024</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Nouvelles fonctionnalités de React 19</h3>
+                    <p class="text-gray-400 mb-4">Analyse des dernières améliorations du framework React et leur impact sur le développement front-end.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full bg-purple-500/20 text-sm">Frontend</span>
+                        <span class="px-3 py-1 rounded-full bg-blue-500/20 text-sm">React</span>
+                    </div>
+                </a>
+                <a href="https://x.com/" target="_blank" class="veille-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="source-badge">X</span>
+                        <span class="text-sm text-gray-400">10 mars 2024</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">L'IA dans le développement</h3>
+                    <p class="text-gray-400 mb-4">Revue des outils d'IA générative pour l'assistance au codage et leur intégration dans les workflows.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full bg-green-500/20 text-sm">IA</span>
+                        <span class="px-3 py-1 rounded-full bg-orange-500/20 text-sm">Productivité</span>
+                    </div>
+                </a>
+                <a href="https://dev.to/" target="_blank" class="veille-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="source-badge">DEV.to</span>
+                        <span class="text-sm text-gray-400">1 avril 2024</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">WebAssembly : La nouvelle frontière</h3>
+                    <p class="text-gray-400 mb-4">Comment WebAssembly transforme les performances des applications web modernes.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-sm">WebAssembly</span>
+                        <span class="px-3 py-1 rounded-full bg-teal-500/20 text-sm">Performance</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="mt-20 max-w-5xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-10 section-title">Outils de Veille</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="p-6 text-center bg-gray-800/50 rounded-2xl tool-card">
+                    <i class="fab fa-github text-4xl mb-3 text-purple-400"></i>
+                    <p class="font-medium text-gray-200">
+                        GitHub Trends
+                    </p>
+                </div>
+                <div class="p-6 text-center bg-gray-800/50 rounded-2xl tool-card">
+                    <i class="fas fa-rss text-4xl mb-3 text-blue-400"></i>
+                    <p class="font-medium text-gray-200">
+                        Flux RSS
+                    </p>
+                </div>
+                <div class="p-6 text-center bg-gray-800/50 rounded-2xl tool-card">
+                    <i class="fab fa-twitter text-4xl mb-3 text-pink-400"></i>
+                    <p class="font-medium text-gray-200">
+                        Twitter Trends
+                    </p>
+                </div>
+                <div class="p-6 text-center bg-gray-800/50 rounded-2xl tool-card">
+                    <i class="fa-brands fa-youtube text-4xl mb-3 text-red-700"></i>
+                    <p class="font-medium text-gray-200">
+                        YouTube
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // RSS Feed Configuration
+        const rssFeeds = [
+            {
+                url: 'https://machinelearningmastery.com/blog/feed/',
+                source: 'MachineLearningMastery.com',
+                tags: ['IA', 'Machine Learning']
+            },
+            {
+                url: 'https://www.artificialintelligence-news.com/feed/',
+                source: 'AI News',
+                tags: ['IA', 'Innovation']
+            },
+            {
+                url: 'https://techcrunch.com/category/artificial-intelligence/feed/',
+                source: 'TechCrunch AI',
+                tags: ['IA', 'Tech']
+            }
+        ];
+
+        // RSS Feed Fetching with Retry
+        async function fetchRSSFeed(retries = 1, delay = 1000) {
+            const proxyUrls = [
+                'https://api.allorigins.win/raw?url=',
+                'https://corsproxy.io/?'
+            ];
+            const feedContainer = document.getElementById('rss-feed');
+            let allArticles = [];
+
+            for (const feed of rssFeeds) {
+                for (let attempt = 0; attempt < retries; attempt++) {
+                    for (const proxyUrl of proxyUrls) {
+                        try {
+                            const response = await fetch(proxyUrl + encodeURIComponent(feed.url), {
+                                headers: { 'Accept': 'application/rss+xml' }
+                            });
+
+                            if (!response.ok) {
+                                throw new Error(`HTTP error: ${response.status}`);
+                            }
+
+                            const text = await response.text();
+                            const parser = new DOMParser();
+                            const xmlDoc = parser.parseFromString(text, 'application/xml');
+
+                            if (xmlDoc.querySelector('parsererror')) {
+                                throw new Error('XML parsing error');
+                            }
+
+                            const items = xmlDoc.querySelectorAll('item');
+                            Array.from(items).forEach(item => {
+                                allArticles.push({
+                                    title: item.querySelector('title')?.textContent || 'Sans titre',
+                                    link: item.querySelector('link')?.textContent || '#',
+                                    pubDate: item.querySelector('pubDate')?.textContent || 'Date inconnue',
+                                    description: item.querySelector('description')?.textContent || 'Aucune description',
+                                    source: feed.source,
+                                    tags: feed.tags
+                                });
+                            });
+
+                            break; // Success, move to next feed
+                        } catch (error) {
+                            console.warn(`Attempt ${attempt + 1} with proxy ${proxyUrl} for ${feed.source} failed:`, error);
+                        }
+                    }
+
+                    if (attempt < retries - 1) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+            }
+
+            // Sort articles by date (newest first) and limit to 6
+            allArticles.sort((a, b) => {
+                const dateA = a.pubDate !== 'Date inconnue' ? new Date(a.pubDate) : new Date(0);
+                const dateB = b.pubDate !== 'Date inconnue' ? new Date(b.pubDate) : new Date(0);
+                return dateB - dateA;
+            });
+
+            feedContainer.innerHTML = '';
+            allArticles.slice(0, 6).forEach((article, index) => {
+                const descText = article.description.replace(/<[^>]+>/g, '').substring(0, 120) + '...';
+                const formattedDate = article.pubDate !== 'Date inconnue' ? new Date(article.pubDate).toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                }) : 'Date inconnue';
+
+                const card = document.createElement('a');
+                card.href = article.link;
+                card.target = '_blank';
+                card.className = 'veille-card p-6 rounded-2xl';
+                card.innerHTML = `
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="source-badge">${article.source}</span>
+                        <span class="text-sm text-gray-400">${formattedDate}</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">${article.title}</h3>
+                    <p class="text-gray-400 mb-4">${descText}</p>
+                    <div class="flex flex-wrap gap-2">
+                        ${article.tags.map(tag => `<span class="px-3 py-1 rounded-full bg-purple-500/20 text-sm">${tag}</span>`).join('')}
+                    </div>
+                `;
+
+                feedContainer.appendChild(card);
+
+                // GSAP Animation
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top bottom-=100'
+                    },
+                    opacity: 0,
+                    y: 60,
+                    duration: 0.8,
+                    ease: 'power3.out',
+                    delay: index * 0.1
+                });
+            });
+
+            if (allArticles.length === 0) {
+                feedContainer.innerHTML = `
+                    <p class="rss-error col-span-full">
+                        Erreur lors du chargement des flux RSS. Veuillez réessayer.
+                        <button class="retry-btn mt-4" onclick="fetchRSSFeed()">Réessayer</button>
+                    </p>`;
+            }
+        }
+
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchRSSFeed();
+            document.querySelectorAll('.veille-card').forEach((card, index) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top bottom-=100'
+                    },
+                    opacity: 0,
+                    y: 60,
+                    duration: 0.8,
+                    ease: 'power3.out',
+                    delay: index * 0.1
+                });
+            });
+
+            document.querySelectorAll('.tool-card').forEach((card, index) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top bottom-=100'
+                    },
+                    opacity: 0,
+                    scale: 0.8,
+                    duration: 0.6,
+                    ease: 'back.out(1.7)',
+                    delay: index * 0.1
+                });
+            });
+        });
+    </script>
+</body>
+</html>
