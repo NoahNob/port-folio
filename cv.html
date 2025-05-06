@@ -5,15 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV - Noah Noblet</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(45deg, #0f0c29, #1a1a2e);
+        }
+
         .pdf-container {
-            height: calc(100vh - 160px);
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
         }
-        
+
         .download-btn {
             background: linear-gradient(45deg, #8B5CF6, #6366F1);
             position: relative;
@@ -34,81 +39,100 @@
             animation: rotate 4s linear infinite;
         }
 
+        .sidebar {
+            background: rgba(15, 12, 41, 0.9);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .sidebar-link {
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8B5CF6;
+        }
+
+        .zoom-btn {
+            background: rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .zoom-btn:hover {
+            background: rgba(139, 92, 246, 0.5);
+            transform: scale(1.1);
+        }
+
         @keyframes rotate {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="bg-[#0f0c29] text-gray-100 min-h-screen">
-        <!-- Navigation -->
-        <nav class="cosmic-nav fixed w-full top-0 z-50">
-            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-                <a href="index.html" class="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                    NN
-                </a>
-                <div class="flex space-x-0 overflow-hidden rounded-full bg-gray-800/50 backdrop-blur-lg border border-white/10">
-                    <a href="index.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-l-full">
-                        <span class="relative z-10">Accueil</span>
-                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
-                    <a href="projects.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
-                        <span class="relative z-10">Projets</span>
-                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
-                    <a href="skills.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
-                        <span class="relative z-10">Compétences</span>
-                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
-                    <a href="cv.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
-                        <span class="relative z-10">CV</span>
-                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
-                    <a href="certifications.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-r-full">
-                        <span class="relative z-10">Certifications</span>
-                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
+<body class="text-gray-100 min-h-screen">
+    <div id="nav-placeholder"></div>
+
+    <main class="container mx-auto px-4 pt-24 flex justify-center">
+        <div class="lg:w-3/4">
+            <h1 class="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                Mon Curriculum Vitae
+            </h1>
+            <section id="overview" class="mb-12">
+                <h2 class="text-2xl font-semibold mb-4 text-center">Vue d'ensemble</h2>
+                <div class="bg-[rgba(15,12,41,0.8)] p-6 rounded-xl border border-[rgba(139,92,246,0.3)]">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-purple-400">Compétences clés</h3>
+                            <ul class="text-gray-400 list-disc list-inside">
+                                <li>HTML5, CSS3, JavaScript</li>
+                                <li>Next.js, React, Spring Boot</li>
+                                <li>Tailwind CSS, Symfony</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-purple-400">Certifications (Voir l'onglet <a href="/port-folio/certifications.html">Certifications</a>)</h3>
+                            <ul class="text-gray-400 list-disc list-inside">
+                                <li>Pix (2025)</li>
+                                <li>SecNum (2024)</li>
+                                <li>SensCyber (2024)</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </section>
 
-    <main class="container mx-auto px-4 pt-24">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold">Mon Curriculum Vitae</h1>
-                <a href="assets/documents/cv.pdf" download 
-                   class="download-btn px-6 py-3 rounded-lg text-white font-medium hover:scale-105 transition-transform">
-                   <span class="relative z-10">📄 Télécharger</span>
-                </a>
-            </div>
-
-            <div class="pdf-container">
-                <embed src="assets/documents/cv.pdf#toolbar=0&navpanes=0" 
-                       type="application/pdf" 
-                       width="100%" 
-                       height="100%" />
-            </div>
+            <section id="cv-preview" class="mb-12">
+                <h2 class="text-2xl font-semibold mb-4 text-center">Aperçu du CV</h2>
+                <div class="pdf-container">
+                    <embed id="pdf-embed" src="assets/documents/cv.pdf#toolbar=0&navpanes=0" 
+                           loading="lazy"
+                           type="application/pdf" 
+                           width="100%" 
+                           height="800px" />
+                    <p class="text-gray-400 text-center mt-4 hidden" id="pdf-fallback">
+                        Votre navigateur ne prend pas en charge l'affichage des PDF. 
+                        <a href="assets/documents/cv.pdf" class="text-purple-400 underline">Téléchargez le CV ici</a>.
+                    </p>
+                </div>
+            </section>
         </div>
     </main>
-
+    <script src="js/global.js"></script>
     <script>
-        // Animation au survol du bouton
-        document.querySelector('.download-btn').addEventListener('mouseenter', function() {
-            anime({
-                targets: this,
-                scale: 1.05,
-                duration: 300,
-                easing: 'easeOutExpo'
-            });
+        gsap.from('.sidebar', {
+            x: -50,
+            opacity: 0,
+            duration: 1,
+            ease: 'power2.out'
         });
-
-        document.querySelector('.download-btn').addEventListener('mouseleave', function() {
-            anime({
-                targets: this,
-                scale: 1,
-                duration: 200,
-                easing: 'easeOutExpo'
-            });
+        gsap.from('section', {
+            y: 50,
+            opacity: 0,
+            stagger: 0.2,
+            duration: 1,
+            ease: 'power2.out',
+            delay: 0.3
         });
     </script>
 </body>

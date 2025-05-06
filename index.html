@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noah Noblet | Développeur Full-Stack</title>
+    <title>Noah Noblet | Développeur en apprentissage</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/global.css">
@@ -11,46 +11,11 @@
     <script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.js"></script>
 </head>
 <body class="bg-gradient-to-b from-[#0f0c29] to-[#1a1a2e] min-h-screen overflow-hidden">
-    <!-- Loader -->
     <div class="cosmic-loader">
         <div class="galaxy-spinner"></div>
         <div class="loading-text">CHARGEMENT DE LA PAGE...</div>
     </div>
-
-    <!-- Main Content -->
-    <div class="main-content hidden">
-        <!-- Navigation -->
-        <nav class="cosmic-nav fixed w-full top-0 z-50">
-            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-                <a href="index.html" class="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                    NN
-                </a>
-                <div class="flex space-x-0 overflow-hidden rounded-full bg-gray-800/50 backdrop-blur-lg border border-white/10">
-                    <a href="index.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-l-full">
-                        <span class="relative z-10">Accueil</span>
-                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
-                    <a href="projects.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
-                        <span class="relative z-10">Projets</span>
-                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
-                    <a href="skills.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
-                        <span class="relative z-10">Compétences</span>
-                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
-                    <a href="cv.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5">
-                        <span class="relative z-10">CV</span>
-                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
-                    <a href="certifications.html" class="nav-button group relative px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-r-full">
-                        <span class="relative z-10">Certifications</span>
-                        <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Hero Section -->
+    <div id="nav-placeholder"></div>
         <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4">
             <div class="text-center space-y-8">
                 <h1 class="text-6xl md:text-8xl font-bold cosmic-shadow">
@@ -75,5 +40,34 @@
     <!-- Scripts -->
     <script src="js/loader.js" type="module"></script>
     <script src="js/cosmic-engine.js" type="module"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const loader = document.querySelector(".cosmic-loader");
+            const mainContent = document.querySelector(".main-content");
+    
+            if (localStorage.getItem("visited")) {
+                // User has visited before, skip loader
+                loader.style.display = "none";
+                mainContent.classList.remove("hidden");
+            } else {
+                // First-time visit, show loader
+                localStorage.setItem("visited", "true");
+                setTimeout(() => {
+                    loader.style.display = "none";
+                    mainContent.classList.remove("hidden");
+                }, 3000); // Adjust the timeout duration as needed
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/port-folio/assets/partials/nav.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('nav-placeholder').innerHTML = data;
+                });
+        });
+    </script>
+    
 </body>
 </html>

@@ -29,3 +29,30 @@
     transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(to right, #8B5CF6, #3B82F6);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.nav-link.active {
+    color: #8B5CF6;
+}
+
+.nav-link.active::after {
+    width: 100%;
+}
