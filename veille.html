@@ -251,7 +251,7 @@
         // RSS Feed Fetching with Retry
         async function fetchRSSFeed(retries = 1, delay = 1000) {
             const proxyUrls = [
-                'https://api.allorigins.win/raw?url='
+                'https://thingproxy.freeboard.io/fetch/'
             ];
             const feedContainer = document.getElementById('rss-feed');
             let allArticles = [];
