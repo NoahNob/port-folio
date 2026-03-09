@@ -251,7 +251,7 @@
         // RSS Feed Fetching with Retry
         async function fetchRSSFeed(retries = 1, delay = 1000) {
             const proxyUrls = [
-                'https://corsproxy.io/?'
+                'https://api.allorigins.win/raw?url='
             ];
             const feedContainer = document.getElementById('rss-feed');
             let allArticles = [];
