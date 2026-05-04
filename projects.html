@@ -12,53 +12,188 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
     <script src="js/global.js"></script>
     <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1a1a3e 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .page-header p {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.65);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-line {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.3s forwards;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 1.875rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .project-container {
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        .carousel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 0 2rem;
+        }
+
+        .carousel-counter {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: rgba(139, 92, 246, 0.8);
+            background: rgba(139, 92, 246, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-bar-container {
+            height: 3px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6, #ec4899, #3b82f6);
+            width: 16.666%;
+            transition: width 0.5s ease;
+            border-radius: 2px;
+        }
+
         .project-card {
-            background: linear-gradient(135deg, 
-                rgba(30, 41, 59, 0.95) 0%, 
-                rgba(15, 23, 42, 0.85) 100%);
-            backdrop-filter: blur(8px);
+            background: linear-gradient(135deg,
+                rgba(30, 41, 59, 0.95) 0%,
+                rgba(15, 23, 42, 0.9) 100%);
+            backdrop-filter: blur(12px);
             position: relative;
             overflow: hidden;
-            border-radius: 1.25rem;
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.6s ease;
+            pointer-events: none;
+        }
+
+        .project-slide.active .project-card::before {
+            left: 100%;
         }
 
         .project-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 32px rgba(139, 92, 246, 0.25);
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.4);
         }
 
         .slide-btn {
-            background: rgba(139, 92, 246, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 0.75rem;
+            background: rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(12px);
+            padding: 0.875rem;
             border-radius: 50%;
+            border: 1px solid rgba(139, 92, 246, 0.3);
             transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
         }
 
-        .slide-btn:hover {
-            background: rgba(139, 92, 246, 0.5);
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
-        }
 
         .project-image {
             width: 100%;
-            height: 180px;
+            height: 200px;
             object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .project-slide.active .project-image {
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
         }
 
         .project-slide {
             transform-style: preserve-3d;
-            transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55), 
-                        opacity 0.7s ease-in-out, 
+            transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                        opacity 0.7s ease-in-out,
                         filter 0.7s ease-in-out;
             opacity: 0;
-            filter: brightness(0.7);
+            filter: brightness(0.6);
             position: absolute;
             top: 0;
             left: 0;
@@ -75,189 +210,699 @@
 
         .project-slide.prev {
             transform: translateX(-100%);
-            opacity: 0.5;
+            opacity: 0.3;
             z-index: 5;
         }
 
         .project-slide.next {
             transform: translateX(100%);
-            opacity: 0.5;
+            opacity: 0.3;
             z-index: 5;
         }
 
         .title-container {
             opacity: 0;
             transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .project-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-icon {
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-title-section h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+
+        .project-status {
+            font-size: 0.813rem;
+            font-weight: 600;
+            opacity: 0.85;
+            letter-spacing: 0.04em;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-badge {
+            padding: 0.4rem 0.95rem;
+            border-radius: 0.625rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            backdrop-filter: blur(8px);
+            border: 1px solid;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .tech-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-description {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .features-list {
+            list-style: none;
+            space-y: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.5;
+            margin-bottom: 0.7rem;
+        }
+
+        .features-list li::before {
+            content: '→';
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+
+        .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: auto;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .nav-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+
+        .indicator-dot.active {
+            background: rgba(139, 92, 246, 0.8);
+            width: 24px;
+            border-radius: 4px;
+            box-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+        }
+
+        .indicator-dot:hover {
+            background: rgba(139, 92, 246, 0.5);
+        }
+
+        .footer-section {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95rem;
+        }
+
+        .footer-section p {
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .cta-section h2 {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            animation: fadeInUp 0.8s ease-out 0.7s both;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: rgba(139, 92, 246, 0.6);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .filter-btn.active {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.8);
+            color: #8b5cf6;
+        }
+
+        /* Skills Section */
+        .skills-section {
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-group {
+            padding: 1.5rem;
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-group:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+            color: #8b5cf6;
+        }
+
+        .fade-in-trigger {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .fade-in-trigger.visible {
+            animation: fadeInUp 0.6s ease-out forwards;
         }
     </style>
 </head>
 
-<body class="bg-[#0f172a] text-gray-100 min-h-screen font-sans overflow-x-hidden">
+<body class="text-gray-100 min-h-screen font-sans overflow-x-hidden">
     <div id="nav-placeholder"></div>
-    <div class="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl pt-24 pb-16">
-        <div class="title-container text-center mb-12">
-            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500">
-                🚀 Mes Projets
-            </h1>
+
+    <div class="container mx-auto px-4 sm:px-6 md:px-8 max-w-6xl pt-32 pb-20">
+        <!-- Page Header with Stats -->
+        <div class="page-header title-container mb-8">
+            <h1>🚀 Mes Projets</h1>
+            <p>Explorez une sélection de projets innovants alliant design, fonctionnalité et performances. Naviguez pour découvrir les détails techniques et les réalisations.</p>
+
+            <!-- Stats Line -->
+            <div class="stats-line mt-8 flex justify-center gap-8 flex-wrap">
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">Projets</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">8+</span>
+                    <span class="stat-label">Technologies</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Stacks</span>
+                </div>
+            </div>
         </div>
 
-        <div class="project-container relative h-[600px]">
-            <button class="slide-btn absolute left-0 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full -ml-5 shadow-lg hover:shadow-purple-500/50" id="prevBtn" aria-label="Projet précédent">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-400 hover:text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-            <button class="slide-btn absolute right-0 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full -mr-5 shadow-lg hover:shadow-purple-500/50" id="nextBtn" aria-label="Projet suivant">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-400 hover:text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
-            <div class="relative h-full w-full">
-                <div class="project-slide active" aria-current="true">
-                    <div class="project-card h-full p-8 flex flex-col">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div class="text-4xl bg-purple-500/30 p-3 rounded-xl shadow-md">📝</div>
-                            <h2 class="text-2xl font-extrabold">Todo-List</h2>
-                        </div>
-                        
-                        <div class="flex flex-wrap gap-4 mb-4">
-                            <span class="bg-purple-500/40 px-3 py-1.5 rounded-full text-sm font-semibold text-purple-200">Java</span>
-                            <span class="bg-purple-500/40 px-3 py-1.5 rounded-full text-sm font-semibold text-purple-200">Spring Boot</span>
-                            <span class="bg-purple-500/40 px-3 py-1.5 rounded-full text-sm font-semibold text-purple-200">MySQL</span>
-                        </div>
-
-                        <div class="mb-4 flex-grow">
-                            <p class="text-gray-300 mb-3 text-base leading-relaxed">
-                                Application de gestion de tâches avec système de priorité et notifications en temps réel.
-                            </p>
-                            <ul class="space-y-2 text-gray-400">
-                                <li class="flex items-start">
-                                    <span class="text-purple-400 mr-2">✦</span>
-                                    Système d'authentification JWT avec refresh token
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-purple-400 mr-2">✦</span>
-                                    Catégorisation des tâches (personnel, travail)
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="flex items-center justify-between text-sm mt-auto pt-3 border-t border-purple-700/50">
-                            <span class="flex items-center text-purple-300"><span class="mr-2">👥</span> Équipe de 4</span>
-                            <span class="flex items-center text-purple-300"><span class="mr-2">⚠️</span> Projet en attente</span>
-                            <span class="flex items-center"><span class="mr-2">🗓️</span> Février 2025 (3 semaines)</span>
-                        </div>
-                    </div>
+        <!-- Projects Carousel -->
+        <div class="project-container relative">
+            <!-- Carousel Header -->
+            <div class="carousel-header">
+                <div class="carousel-counter">
+                    <span id="slide-number">1</span> / 6
                 </div>
-                <div class="project-slide next" aria-hidden="true">
-                    <div class="project-card h-full p-8 flex flex-col">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div class="text-4xl bg-blue-500/30 p-3 rounded-xl shadow-md">📌</div>
-                            <div>
-                                <h2 class="text-2xl font-extrabold">Tableau Kanban</h2>
-                                <span class="text-blue-400 text-sm font-semibold">Projet en cours</span>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <button class="slide-btn absolute left-2 top-[80%] translate-x-[-64px] z-50" id="prevBtn" aria-label="Projet précédent" title="Projet précédent">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+
+            <button class="slide-btn absolute right-2 top-[80%] translate-x-[64px] z-50" id="nextBtn" aria-label="Projet suivant" title="Projet suivant">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+
+            <div class="relative h-[650px] sm:h-[700px] md:h-[650px]">
+                <!-- Slide 1: Todo-List -->
+                <div class="project-slide active" aria-current="true">
+                    <div class="project-card h-full p-8 md:p-10 flex flex-col">
+                        <div class="project-header">
+                            <div class="project-icon bg-purple-500/30">📝</div>
+                            <div class="project-title-section">
+                                <h2>Todo-List</h2>
+                                <span class="project-status text-purple-300">Projet en attente</span>
                             </div>
                         </div>
 
-                        <div class="flex flex-wrap gap-4 mb-4">
-                            <span class="bg-blue-500/40 px-3 py-1.5 rounded-full text-sm font-semibold text-blue-200">Next.js</span>
-                            <span class="bg-blue-500/40 px-3 py-1.5 rounded-full text-sm font-semibold text-blue-200">Spring Boot</span>
-                            <span class="bg-blue-500/40 px-3 py-1.5 rounded-full text-sm font-semibold text-blue-200">WebSocket</span>
+                        <div class="tech-badges">
+                            <span class="tech-badge bg-purple-500/30 text-purple-100 border-purple-500/40">Java</span>
+                            <span class="tech-badge bg-purple-500/30 text-purple-100 border-purple-500/40">Spring Boot</span>
+                            <span class="tech-badge bg-purple-500/30 text-purple-100 border-purple-500/40">MySQL</span>
                         </div>
 
-                        <div class="mb-4 flex-grow">
-                            <p class="text-gray-300 mb-3 text-base leading-relaxed">
-                                Tableau de gestion de projet collaboratif avec synchronisation en temps réel.
-                            </p>
-                            <ul class="space-y-2 text-gray-400">
-                                <li class="flex items-start">
-                                    <span class="text-blue-400 mr-2">✦</span>
-                                    Drag-and-drop pour réorganiser les tâches (planifié)
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-blue-400 mr-2">✦</span>
-                                    Authentification utilisateur
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-blue-400 mr-2">✦</span>
-                                    Mises à jour en temps réel via WebSocket (planifié)
-                                </li>
-                            </ul>
-                        </div>
-                        <img src="assets/projects/kanban.png" alt="Kanban Project" class="project-image">
-                        <div class="flex items-center justify-between text-sm mt-auto pt-3 border-t border-blue-700/50">
-                            <span class="flex items-center text-blue-300"><span class="mr-2">👥</span> Équipe de 4</span>
-                            <span class="flex items-center"><span class="mr-2">🗓️</span> Mars 2025 - Présent</span>
+                        <p class="project-description">
+                            Application de gestion de tâches avec système de priorité et notifications en temps réel.
+                        </p>
+
+                        <ul class="features-list">
+                            <li><span class="text-purple-400">✓</span> Système d'authentification JWT avec refresh token</li>
+                            <li><span class="text-purple-400">✓</span> Catégorisation des tâches (personnel, travail)</li>
+                        </ul>
+
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <span>👥</span>
+                                <span>Équipe de 4</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🗓️</span>
+                                <span>Février 2025</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Slide 2: Tableau Kanban -->
+                <div class="project-slide next" aria-hidden="true">
+                    <div class="project-card h-full p-8 md:p-10 flex flex-col">
+                        <div class="project-header">
+                            <div class="project-icon bg-blue-500/30">📌</div>
+                            <div class="project-title-section">
+                                <h2>Tableau Kanban</h2>
+                                <span class="project-status text-blue-300">Projet en cours</span>
+                            </div>
+                        </div>
+
+                        <div class="tech-badges">
+                            <span class="tech-badge bg-blue-500/30 text-blue-100 border-blue-500/40">Next.js</span>
+                            <span class="tech-badge bg-blue-500/30 text-blue-100 border-blue-500/40">Spring Boot</span>
+                            <span class="tech-badge bg-blue-500/30 text-blue-100 border-blue-500/40">WebSocket</span>
+                        </div>
+
+                        <p class="project-description">
+                            Tableau de gestion de projet collaboratif avec synchronisation en temps réel.
+                        </p>
+
+                        <ul class="features-list">
+                            <li><span class="text-blue-400">✓</span> Drag-and-drop pour réorganiser les tâches</li>
+                            <li><span class="text-blue-400">✓</span> Authentification utilisateur</li>
+                            <li><span class="text-blue-400">✓</span> Mises à jour en temps réel via WebSocket</li>
+                        </ul>
+
+                        <img src="assets/projects/kanban.png" alt="Kanban Project" class="project-image">
+
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <span>👥</span>
+                                <span>Équipe de 4</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🗓️</span>
+                                <span>Mars 2025 - Présent</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Gestion Budget -->
                 <div class="project-slide prev" aria-hidden="true">
-                    <div class="project-card h-full p-8 flex flex-col">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div class="text-4xl bg-emerald-500/30 p-3 rounded-xl shadow-md">🏦</div>
-                            <h2 class="text-2xl font-extrabold">Gestion de budget</h2>
+                    <div class="project-card h-full p-8 md:p-10 flex flex-col">
+                        <div class="project-header">
+                            <div class="project-icon bg-emerald-500/30">🏦</div>
+                            <div class="project-title-section">
+                                <h2>Gestion de Budget</h2>
+                            </div>
                         </div>
 
-                        <div class="flex flex-wrap gap-4 mb-4">
-                            <span class="bg-emerald-500/40 px-3 py-1.5 rounded-full text-sm font-semibold text-emerald-200">Symfony</span>
-                            <span class="bg-emerald-500/40 px-3 py-1.5 rounded-full text-sm font-semibold text-emerald-200">PHP</span>
-                            <span class="bg-emerald-500/40 px-3 py-1.5 rounded-full text-sm font-semibold text-emerald-200">MySQL</span>
-                            <span class="bg-emerald-500/40 px-3 py-1.5 rounded-full text-sm font-semibold text-emerald-200">Twig</span>
+                        <div class="tech-badges">
+                            <span class="tech-badge bg-emerald-500/30 text-emerald-100 border-emerald-500/40">Symfony</span>
+                            <span class="tech-badge bg-emerald-500/30 text-emerald-100 border-emerald-500/40">PHP</span>
+                            <span class="tech-badge bg-emerald-500/30 text-emerald-100 border-emerald-500/40">MySQL</span>
+                            <span class="tech-badge bg-emerald-500/30 text-emerald-100 border-emerald-500/40">Twig</span>
                         </div>
 
-                        <div class="mb-4 flex-grow">
-                            <p class="text-gray-300 mb-3 text-base leading-relaxed">
-                                Application web de gestion de budget.
-                            </p>
-                            <ul class="space-y-2 text-gray-400">
-                                <li class="flex items-start">
-                                    <span class="text-emerald-400 mr-2">✦</span>
-                                    Historique des transactions avec pagination
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-emerald-400 mr-2">✦</span>
-                                    Gestion des rôles utilisateurs (admin, client)
-                                </li>
-                            </ul>
-                        </div>
+                        <p class="project-description">
+                            Application web de gestion de budget avec historique des transactions et gestion des rôles.
+                        </p>
+
+                        <ul class="features-list">
+                            <li><span class="text-emerald-400">✓</span> Historique des transactions avec pagination</li>
+                            <li><span class="text-emerald-400">✓</span> Gestion des rôles utilisateurs (admin, client)</li>
+                        </ul>
 
                         <img src="assets/projects/banking.png" alt="Banking Project" class="project-image">
-                        <div class="flex items-center justify-between text-sm mt-auto pt-3 border-t border-emerald-700/50">
-                            <span class="flex items-center text-emerald-300"><span class="mr-2">👥</span> Équipe de 4</span>
-                            <span class="flex items-center"><span class="mr-2">🗓️</span> Décembre 2024</span>
+
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <span>👥</span>
+                                <span>Équipe de 4</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🗓️</span>
+                                <span>Décembre 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4: CV-Maker -->
+                <div class="project-slide next" aria-hidden="true">
+                    <div class="project-card h-full p-8 md:p-10 flex flex-col">
+                        <div class="project-header">
+                            <div class="project-icon bg-yellow-500/30">📄</div>
+                            <div class="project-title-section">
+                                <h2>CV-Maker</h2>
+                                <span class="project-status text-yellow-300">Créateur de Portfolios</span>
+                            </div>
+                        </div>
+
+                        <div class="tech-badges">
+                            <span class="tech-badge bg-yellow-500/30 text-yellow-100 border-yellow-500/40">Java</span>
+                            <span class="tech-badge bg-yellow-500/30 text-yellow-100 border-yellow-500/40">Spring Boot</span>
+                            <span class="tech-badge bg-yellow-500/30 text-yellow-100 border-yellow-500/40">Maven</span>
+                            <span class="tech-badge bg-yellow-500/30 text-yellow-100 border-yellow-500/40">PostgreSQL</span>
+                        </div>
+
+                        <p class="project-description">
+                            Plateforme de création et gestion de CV transformables en portfolios interactifs.
+                        </p>
+
+                        <ul class="features-list">
+                            <li><span class="text-yellow-400">✓</span> Gestion complète des comptes utilisateurs</li>
+                            <li><span class="text-yellow-400">✓</span> Gestion des rubriques du portfolio</li>
+                            <li><span class="text-yellow-400">✓</span> Spring MVC, Spring Data JPA/Hibernate</li>
+                            <li><span class="text-yellow-400">✓</span> Tests JUnit et MockMvc</li>
+                        </ul>
+
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <span>👨‍💻</span>
+                                <span>Personnel</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🗓️</span>
+                                <span>13/10/25 - 10/12/26</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 5: Local-Events -->
+                <div class="project-slide next" aria-hidden="true">
+                    <div class="project-card h-full p-8 md:p-10 flex flex-col">
+                        <div class="project-header">
+                            <div class="project-icon bg-cyan-500/30">🎉</div>
+                            <div class="project-title-section">
+                                <h2>Local-Events</h2>
+                                <span class="project-status text-cyan-300">Événements Locaux</span>
+                            </div>
+                        </div>
+
+                        <div class="tech-badges">
+                            <span class="tech-badge bg-cyan-500/30 text-cyan-100 border-cyan-500/40">Node.js</span>
+                            <span class="tech-badge bg-cyan-500/30 text-cyan-100 border-cyan-500/40">Fastify</span>
+                            <span class="tech-badge bg-cyan-500/30 text-cyan-100 border-cyan-500/40">Next.js</span>
+                            <span class="tech-badge bg-cyan-500/30 text-cyan-100 border-cyan-500/40">PostgreSQL</span>
+                        </div>
+
+                        <p class="project-description">
+                            Plateforme de gestion et découverte d'événements locaux en temps réel.
+                        </p>
+
+                        <ul class="features-list">
+                            <li><span class="text-cyan-400">✓</span> Gestion des comptes utilisateurs</li>
+                            <li><span class="text-cyan-400">✓</span> Backend API : Prisma/PostgreSQL, JWT 24h</li>
+                            <li><span class="text-cyan-400">✓</span> Frontend : Next.js pages, Tailwind CSS</li>
+                            <li><span class="text-cyan-400">✓</span> Tests Vitest, documentation Swagger</li>
+                        </ul>
+
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <span>👨‍💻</span>
+                                <span>Personnel</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🗓️</span>
+                                <span>18/03/26 - 13/05/26</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 6: AfterClass -->
+                <div class="project-slide next" aria-hidden="true">
+                    <div class="project-card h-full p-8 md:p-10 flex flex-col">
+                        <div class="project-header">
+                            <div class="project-icon bg-rose-500/30">🎓</div>
+                            <div class="project-title-section">
+                                <h2>AfterClass</h2>
+                                <span class="project-status text-rose-300">Plateforme Alumni</span>
+                            </div>
+                        </div>
+
+                        <div class="tech-badges">
+                            <span class="tech-badge bg-rose-500/30 text-rose-100 border-rose-500/40">PHP 8.2</span>
+                            <span class="tech-badge bg-rose-500/30 text-rose-100 border-rose-500/40">Symfony 7.4</span>
+                            <span class="tech-badge bg-rose-500/30 text-rose-100 border-rose-500/40">Twig</span>
+                            <span class="tech-badge bg-rose-500/30 text-rose-100 border-rose-500/40">Stimulus</span>
+                        </div>
+
+                        <p class="project-description">
+                            Plateforme alumni pour CaenSup avec annuaire centralisé, career-tracking et dashboards statistiques.
+                        </p>
+
+                        <ul class="features-list">
+                            <li><span class="text-rose-400">✓</span> Annuaire d'anciens élèves centralisé</li>
+                            <li><span class="text-rose-400">✓</span> Gestionnaire de profils avec career-tracking</li>
+                            <li><span class="text-rose-400">✓</span> Dashboard statistiques (Chart.js)</li>
+                            <li><span class="text-rose-400">✓</span> API Symfony complète, Doctrine ORM, PhPUnit</li>
+                        </ul>
+
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <span>👨‍💻</span>
+                                <span>Conception & Développement</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🗓️</span>
+                                <span>15/12/25 - 13/02/26</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Navigation Indicators -->
+            <div class="nav-indicators">
+                <div class="indicator-dot active" data-index="0"></div>
+                <div class="indicator-dot" data-index="1"></div>
+                <div class="indicator-dot" data-index="2"></div>
+                <div class="indicator-dot" data-index="3"></div>
+                <div class="indicator-dot" data-index="4"></div>
+                <div class="indicator-dot" data-index="5"></div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="p-56 mt-12">
+            <div class="cta-section  mt-16 mb-16 p-8 md:p-12 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-2xl border border-purple-500/20 fade-in-trigger">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Vous avez un projet similaire en tête ?</h2>
+                <p class="text-white/70 mb-8 max-w-2xl">Je suis toujours intéressé par de nouveaux défis et collaborations. N'hésitez pas à me contacter pour discuter de vos idées.</p>
+                <a href="#contact" class="inline-block px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
+                    Me Contacter
+                </a>
+            </div>
+        </div>
+        <div class="filter-section mb-12 fade-in-trigger">
+            <h3 class="text-xl font-bold mb-6">Filtrer par Stack</h3>
+            <div class="flex flex-wrap gap-3">
+                <button class="filter-btn active" data-filter="all">Tous</button>
+                <button class="filter-btn" data-filter="java">Java/Spring</button>
+                <button class="filter-btn" data-filter="php">PHP/Symfony</button>
+                <button class="filter-btn" data-filter="javascript">JavaScript/Node</button>
+            </div>
+        </div>
+
+        <div class="skills-section mb-20 fade-in-trigger">
+            <h3 class="text-xl font-bold mb-8">Technologies & Compétences Démontrées</h3>
+            <div class="skills-grid">
+                <div class="skill-group">
+                    <h4 class="font-semibold text-purple-400 mb-3">Backend</h4>
+                    <div class="skills-list">
+                        <span class="skill-tag">Spring Boot</span>
+                        <span class="skill-tag">Symfony</span>
+                        <span class="skill-tag">Node.js/Fastify</span>
+                        <span class="skill-tag">REST API</span>
+                        <span class="skill-tag">JWT</span>
+                    </div>
+                </div>
+                <div class="skill-group">
+                    <h4 class="font-semibold text-cyan-400 mb-3">Databases</h4>
+                    <div class="skills-list">
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">Prisma ORM</span>
+                        <span class="skill-tag">Doctrine ORM</span>
+                        <span class="skill-tag">JPA/Hibernate</span>
+                    </div>
+                </div>
+                <div class="skill-group">
+                    <h4 class="font-semibold text-pink-400 mb-3">Frontend</h4>
+                    <div class="skills-list">
+                        <span class="skill-tag">Next.js</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Tailwind CSS</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">Twig</span>
+                    </div>
+                </div>
+                <div class="skill-group">
+                    <h4 class="font-semibold text-orange-400 mb-3">Tools & Testing</h4>
+                    <div class="skills-list">
+                        <span class="skill-tag">Git/GitHub</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">JUnit/Vitest</span>
+                        <span class="skill-tag">Maven</span>
+                        <span class="skill-tag">Swagger</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-section">
+            <p>© 2025 Noah Noblet • Tous droits réservés</p>
         </div>
     </div>
 
-    <footer class="bg-[rgba(15,12,41,0.9)] py-8">
-        <div class="container mx-auto px-4 text-center text-gray-400">
-            <p>© 2025 Noah Noblet. Tous droits réservés.</p>
-        </div>
-    </footer>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            gsap.to('.title-container', {
+            gsap.to('.page-header', {
                 opacity: 1,
-                y: 0,
-                duration: 1,
+                duration: 0.8,
                 ease: 'power2.out'
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-trigger').forEach(el => {
+                observer.observe(el);
             });
         });
 
         const slides = document.querySelectorAll('.project-slide');
+        const dots = document.querySelectorAll('.indicator-dot');
         const prevBtn = document.querySelector('#prevBtn');
         const nextBtn = document.querySelector('#nextBtn');
         const projectContainer = document.querySelector('.project-container');
+        const progressBar = document.querySelector('.progress-bar');
+        const slideNumber = document.querySelector('#slide-number');
         let currentIndex = 0;
-        let rotationInterval;
+        const autoRotate = false; // DISABLED
 
         function updateSlides() {
             slides.forEach((slide, index) => {
                 slide.classList.remove('active', 'prev', 'next');
                 slide.setAttribute('aria-hidden', 'true');
+
+                dots.forEach(dot => dot.classList.remove('active'));
+                dots[currentIndex].classList.add('active');
+
+                // Update progress bar
+                const progress = ((currentIndex + 1) / slides.length) * 100;
+                progressBar.style.width = progress + '%';
+
+                // Update slide counter
+                slideNumber.textContent = currentIndex + 1;
+
                 if (index === currentIndex) {
                     slide.classList.add('active');
                     slide.setAttribute('aria-current', 'true');
@@ -270,90 +915,44 @@
             });
         }
 
-        function startRotation() {
-            if (autoRotate) {
-                rotationInterval = setInterval(() => {
-                    currentIndex = (currentIndex + 1) % slides.length;
-                    updateSlides();
-                }, 5000);
-            }
-        }
-
-        function stopRotation() {
-            clearInterval(rotationInterval);
-        }
-
         prevBtn.addEventListener('click', () => {
             currentIndex = (currentIndex - 1 + slides.length) % slides.length;
             updateSlides();
-            stopRotation();
-            if (autoRotate) startRotation();
         });
 
         nextBtn.addEventListener('click', () => {
             currentIndex = (currentIndex + 1) % slides.length;
             updateSlides();
-            stopRotation();
-            if (autoRotate) startRotation();
         });
 
-        projectContainer.addEventListener('mouseenter', () => {
-            stopRotation();
-        });
-
-        projectContainer.addEventListener('mouseleave', () => {
-            if (autoRotate) startRotation();
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                updateSlides();
+            });
         });
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
                 currentIndex = (currentIndex - 1 + slides.length) % slides.length;
                 updateSlides();
-                stopRotation();
-                if (autoRotate) startRotation();
             } else if (e.key === 'ArrowRight') {
                 currentIndex = (currentIndex + 1) % slides.length;
                 updateSlides();
-                stopRotation();
-                if (autoRotate) startRotation();
             }
         });
 
-        updateSlides();
-        startRotation();
-    </script>
-    <script src="js/projects.js"></script>
-<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
-    <div class="relative">
-        <img id="modalImage" src="" alt="Project Image" class="max-w-full max-h-screen rounded-lg">
-        <button id="closeModal" class="absolute top-2 right-2 text-white text-2xl font-bold">&times;</button>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const images = document.querySelectorAll('.project-image');
-        const modal = document.getElementById('imageModal');
-        const modalImage = document.getElementById('modalImage');
-        const closeModal = document.getElementById('closeModal');
-
-        images.forEach(image => {
-            image.addEventListener('click', () => {
-                modalImage.src = image.src;
-                modal.classList.remove('hidden');
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // Filtering logic can be expanded
             });
         });
 
-        closeModal.addEventListener('click', () => {
-            modal.classList.add('hidden');
-        });
-
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.add('hidden');
-            }
-        });
-    });
-</script>
-</body>
-</html>
+         updateSlides();
+     </script>
+  </body>
+  </html>
