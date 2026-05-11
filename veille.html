@@ -6,8 +6,8 @@
     <title>Veille Technologique - Noah Noblet</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="js/global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <style>
         body {
@@ -21,9 +21,13 @@
         .veille-card {
             background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
             border: 1px solid rgba(139, 92, 246, 0.3);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        border-color 0.4s ease;
             position: relative;
             overflow: hidden;
+            display: block;
+            text-decoration: none;
         }
 
         .veille-card::before {
@@ -43,8 +47,9 @@
         }
 
         .veille-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-8px) !important;
             box-shadow: 0 12px 24px rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.6);
         }
 
         .source-badge {
@@ -54,26 +59,31 @@
             font-size: 0.85rem;
             font-weight: 500;
             color: #D8B4FE;
+            white-space: nowrap;
         }
 
-        .rss-error, .rss-loading {
+        .rss-error {
             background: rgba(220, 38, 38, 0.15);
             border: 1px solid rgba(220, 38, 38, 0.3);
             color: #FECACA;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 12px;
             text-align: center;
             font-weight: 500;
+            grid-column: 1 / -1;
         }
 
         .rss-loading {
             background: rgba(139, 92, 246, 0.15);
             border: 1px solid rgba(139, 92, 246, 0.3);
             color: #E9D5FF;
+            padding: 2rem;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 1rem;
+            grid-column: 1 / -1;
         }
 
         .spinner {
@@ -82,11 +92,12 @@
             border-radius: 50%;
             width: 24px;
             height: 24px;
+            flex-shrink: 0;
             animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
+            0%   { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
@@ -96,7 +107,11 @@
             padding: 0.75rem 1.5rem;
             border-radius: 9999px;
             font-weight: 500;
-            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+            margin-top: 1rem;
         }
 
         .retry-btn:hover {
@@ -112,17 +127,47 @@
         }
 
         .tool-card {
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .tool-card:hover {
-            transform: scale(1.05);
+            transform: scale(1.05) !important;
             box-shadow: 0 8px 16px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Cosmic nav styles (inlined since global.js/nav may not be available) */
+        .cosmic-nav {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 50;
+            background: transparent;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body class="bg-[#0f172a] text-gray-100 min-h-screen">
-    <div id="nav-placeholder"></div>
+
+    <!-- Navigation -->
+    <nav class="cosmic-nav">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="index.html" class="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent" style="font-family:'Space Grotesk',sans-serif;">
+                NN
+            </a>
+            <div class="flex overflow-hidden rounded-full bg-gray-800/50 backdrop-blur-lg border border-white/10">
+                <a href="index.html"        class="nav-link group relative px-4 md:px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-l-full text-sm md:text-base">Accueil</a>
+                <a href="projects.html"     class="nav-link group relative px-4 md:px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 text-sm md:text-base">Projets</a>
+                <a href="skills.html"       class="nav-link group relative px-4 md:px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 text-sm md:text-base">Compétences</a>
+                <a href="cv.html"           class="nav-link group relative px-4 md:px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 text-sm md:text-base">CV</a>
+                <a href="certifications.html" class="nav-link group relative px-4 md:px-6 py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 text-sm md:text-base">Certifications</a>
+                <a href="veille.html"       class="nav-link group relative px-4 md:px-6 py-3 text-purple-400 font-medium transition-all duration-300 hover:bg-white/5 rounded-r-full text-sm md:text-base">Veille</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mx-auto px-4 max-w-7xl pt-32 pb-20">
         <h1 class="text-5xl md:text-6xl font-bold text-center mb-12 section-title">
             Veille Technologique
@@ -134,398 +179,252 @@
             </p>
         </div>
 
+        <!-- RSS Feed Section -->
         <section class="mb-20">
-            <h2 class="text-3xl md:text-4xl font-bold mb-10 section-title">Dernières Actualités IA & Tech</h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-10 section-title">Dernières Actualités IA &amp; Tech</h2>
             <div id="rss-feed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <p class="rss-loading col-span-full">
-                    <span class="spinner"></span>
-                    Chargement des actualités...
-                </p>
+                <div class="rss-loading">
+                    <div class="spinner"></div>
+                    <span>Chargement des flux RSS…</span>
+                </div>
             </div>
         </section>
-          <h2 class="text-3xl md:text-4xl font-bold mb-10 section-title">Articles Sélectionnés</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-            <a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" class="veille-card p-6 rounded-2xl">
-              <div class="flex items-center gap-3 mb-4">
-                <span class="source-badge">Stanford HAI</span>
-                <span class="text-sm text-gray-400">Avril 2026</span>
-              </div>
-              <h3 class="text-xl font-bold mb-3">The 2026 AI Index Report</h3>
-              <p class="text-gray-400 mb-4">Rapport de Stanford montrant que l’IA progresse très rapidement (performances, adoption massive ~88% des organisations) et devient une infrastructure clé de l’économie mondiale.
-              <div class="flex flex-wrap gap-2">
-                <span class="px-3 py-1 rounded-full bg-blue-500/20 text-sm">Politique</span>
-                <span class="px-3 py-1 rounded-full bg-green-500/20 text-sm">Investissement</span>
-                <span class="px-3 py-1 rounded-full bg-purple-500/20 text-sm">Gouvernance</span>
-              </div>
-            </a>
-        
-            <a href="https://www.oxford-aiethics.ox.ac.uk/ai-governance-updates" target="_blank" class="veille-card p-6 rounded-2xl">
-              <div class="flex items-center gap-3 mb-4">
-                <span class="source-badge">Oxford AI Ethics</span>
-                <span class="text-sm text-gray-400">Mars 2026</span>
-              </div>
-              <h3 class="text-xl font-bold mb-3">Governing Advanced AI: Bridging the Accountability Gap</h3>
-              <p class="text-gray-400 mb-4">Une analyse récente sur les défis de gouvernance des systèmes d’IA avancés, mettant en lumière le manque de mécanismes d’imputabilité face à leur déploiement rapide.</p>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-3 py-1 rounded-full bg-red-500/20 text-sm">Gouvernance</span>
-                <span class="px-3 py-1 rounded-full bg-blue-500/20 text-sm">Régulation</span>
-                <span class="px-3 py-1 rounded-full bg-green-500/20 text-sm">Policy</span>
-              </div>
-            </a>
-        
-            <a href="https://news.mit.edu/2026/evaluating-autonomous-systems-ethics-0402" target="_blank" class="veille-card p-6 rounded-2xl">
-              <div class="flex items-center gap-3 mb-4">
-                <span class="source-badge">MIT News</span>
-                <span class="text-sm text-gray-400">Avril 2026</span>
-              </div>
-              <h3 class="text-xl font-bold mb-3">Evaluating the Ethics of Autonomous Systems</h3>
-              <p class="text-gray-400 mb-4">Des chercheurs du MIT proposent un cadre pour identifier les biais et injustices dans les systèmes décisionnels automatisés, afin de mieux détecter les risques réels en conditions d’usage.</p>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-3 py-1 rounded-full bg-red-500/20 text-sm">Éthique</span>
-                <span class="px-3 py-1 rounded-full bg-blue-500/20 text-sm">Autonomie</span>
-                <span class="px-3 py-1 rounded-full bg-green-500/20 text-sm">Fairness</span>
-              </div>
-            </a>
-        
-          </div>
+
+        <!-- Curated Articles -->
+        <section class="mb-20">
+            <h2 class="text-3xl md:text-4xl font-bold mb-10 section-title">Articles Sélectionnés</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="curated-articles">
+
+                <a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener noreferrer" class="veille-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="source-badge">Stanford HAI</span>
+                        <span class="text-sm text-gray-400">Avril 2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">The 2026 AI Index Report</h3>
+                    <p class="text-gray-400 mb-4">Rapport de Stanford montrant que l'IA progresse très rapidement (performances, adoption massive ~88% des organisations) et devient une infrastructure clé de l'économie mondiale.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full bg-blue-500/20 text-sm">Politique</span>
+                        <span class="px-3 py-1 rounded-full bg-green-500/20 text-sm">Investissement</span>
+                        <span class="px-3 py-1 rounded-full bg-purple-500/20 text-sm">Gouvernance</span>
+                    </div>
+                </a>
+
+                <a href="https://www.oxford-aiethics.ox.ac.uk/ai-governance-updates" target="_blank" rel="noopener noreferrer" class="veille-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="source-badge">Oxford AI Ethics</span>
+                        <span class="text-sm text-gray-400">Mars 2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Governing Advanced AI: Bridging the Accountability Gap</h3>
+                    <p class="text-gray-400 mb-4">Une analyse récente sur les défis de gouvernance des systèmes d'IA avancés, mettant en lumière le manque de mécanismes d'imputabilité face à leur déploiement rapide.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full bg-red-500/20 text-sm">Gouvernance</span>
+                        <span class="px-3 py-1 rounded-full bg-blue-500/20 text-sm">Régulation</span>
+                        <span class="px-3 py-1 rounded-full bg-green-500/20 text-sm">Policy</span>
+                    </div>
+                </a>
+
+                <a href="https://news.mit.edu/2026/evaluating-autonomous-systems-ethics-0402" target="_blank" rel="noopener noreferrer" class="veille-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="source-badge">MIT News</span>
+                        <span class="text-sm text-gray-400">Avril 2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Evaluating the Ethics of Autonomous Systems</h3>
+                    <p class="text-gray-400 mb-4">Des chercheurs du MIT proposent un cadre pour identifier les biais et injustices dans les systèmes décisionnels automatisés, afin de mieux détecter les risques réels en conditions d'usage.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full bg-red-500/20 text-sm">Éthique</span>
+                        <span class="px-3 py-1 rounded-full bg-blue-500/20 text-sm">Autonomie</span>
+                        <span class="px-3 py-1 rounded-full bg-green-500/20 text-sm">Fairness</span>
+                    </div>
+                </a>
+
+            </div>
         </section>
 
-
+        <!-- Tools Section -->
         <section class="mt-20 max-w-5xl mx-auto">
             <h2 class="text-3xl md:text-4xl font-bold mb-10 section-title">Outils de Veille</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6" id="tools-grid">
                 <div class="p-6 text-center bg-gray-800/50 rounded-2xl tool-card">
                     <i class="fab fa-github text-4xl mb-3 text-purple-400"></i>
-                    <p class="font-medium text-gray-200">
-                        GitHub Trends
-                    </p>
+                    <p class="font-medium text-gray-200">GitHub Trends</p>
                 </div>
                 <div class="p-6 text-center bg-gray-800/50 rounded-2xl tool-card">
                     <i class="fas fa-rss text-4xl mb-3 text-blue-400"></i>
-                    <p class="font-medium text-gray-200">
-                        Flux RSS
-                    </p>
+                    <p class="font-medium text-gray-200">Flux RSS</p>
                 </div>
                 <div class="p-6 text-center bg-gray-800/50 rounded-2xl tool-card">
                     <i class="fab fa-twitter text-4xl mb-3 text-pink-400"></i>
-                    <p class="font-medium text-gray-200">
-                        Twitter Trends
-                    </p>
+                    <p class="font-medium text-gray-200">Twitter Trends</p>
                 </div>
                 <div class="p-6 text-center bg-gray-800/50 rounded-2xl tool-card">
-                    <i class="fa-brands fa-youtube text-4xl mb-3 text-red-700"></i>
-                    <p class="font-medium text-gray-200">
-                        YouTube
-                    </p>
+                    <i class="fa-brands fa-youtube text-4xl mb-3 text-red-500"></i>
+                    <p class="font-medium text-gray-200">YouTube</p>
                 </div>
             </div>
         </section>
     </div>
 
     <script>
-        // RSS Feed Fetching with Retry
-async function fetchRSSFeed(retries = 1, delay = 1000) {
-    const proxyUrls = [
-        "https://everyorigin.deno.dev/?url=",
-        "https://cors.lol/?url=",
-        "https://cors.x2u.in/?url=",
-        "https://test.cors.workers.dev/?url=",
-        "https://cors.utilitytool.app/?url=",
-        "https://www.thebugging.com/apis/cors-proxy/?url="
-    ];
+        // ─── GSAP Setup ───────────────────────────────────────────────────────────
+        gsap.registerPlugin(ScrollTrigger);
 
-    const feedContainer = document.getElementById('rss-feed');
-    let allArticles = [];
-    const rssFeeds = [
-        {
-            url: "https://machinelearningmastery.com/blog/feed/",
-            source: "Machine Learning Mastery",
-            tags: ["IA", "Machine Learning"]
-        },
-        {
-            url: "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
-            source: "MIT Technology Review",
-            tags: ["IA", "News"]
-        },
-        {
-            url: "https://bair.berkeley.edu/blog/feed/",
-            source: "Université de Berkeley",
-            tags: ["IA", "Recherche"]
-        },
-        {
-            url: "https://deepmind.google/discover/blog/rss.xml",
-            source: "Google DeepMind",
-            tags: ["IA", "Recherche"]
-        },
-        {
-            url: "https://github.blog/tag/ai/feed/",
-            source: "GitHub",
-            tags: ["IA", "Développement"]
-        }
-    ];
-    for (const feed of rssFeeds) {
-
-        if (!feed.url) {
-            console.warn("Missing feed URL:", feed);
-            continue;
+        function animateCards(selector, extraProps = {}) {
+            document.querySelectorAll(selector).forEach((el, i) => {
+                gsap.from(el, {
+                    scrollTrigger: { trigger: el, start: 'top bottom-=80' },
+                    opacity: 0, y: 50, duration: 0.7, ease: 'power3.out',
+                    delay: i * 0.08, ...extraProps
+                });
+            });
         }
 
-        let success = false;
+        // ─── RSS Config ───────────────────────────────────────────────────────────
+        const RSS_FEEDS = [
+            { url: 'https://github.blog/tag/ai/feed/',                                    source: 'GitHub',         tags: ['IA', 'Développement']  },
+            { url: 'https://machinelearningmastery.com/blog/feed/',                       source: 'ML Mastery',     tags: ['IA', 'Machine Learning']},
+            { url: 'https://www.technologyreview.com/topic/artificial-intelligence/feed/',source: 'MIT Tech Review',tags: ['IA', 'News']            },
+            { url: 'https://bair.berkeley.edu/blog/feed/',                                source: 'Berkeley AI',    tags: ['IA', 'Recherche']       },
+            { url: 'https://deepmind.google/discover/blog/rss.xml',                       source: 'Google DeepMind',tags: ['IA', 'Recherche']       },
+        ];
 
-        for (let attempt = 0; attempt < retries && !success; attempt++) {
+        const PROXIES = [
+            url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+            url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+            url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+            url => `https://thingproxy.freeboard.io/fetch/${encodeURIComponent(url)}`,
+        ];
 
-            for (const proxyUrl of proxyUrls) {
+        // ─── Fetch helpers ────────────────────────────────────────────────────────
+        // No AbortController — signals can't be cloned in sandboxed iframes.
+        // Use Promise.race with a plain rejection timer instead.
+        function withTimeout(promise, ms) {
+            const timer = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error(`Timeout ${ms}ms`)), ms)
+            );
+            return Promise.race([promise, timer]);
+        }
 
+        async function fetchWithProxy(feedUrl, timeoutMs = 8000) {
+            for (const buildProxy of PROXIES) {
+                const proxyUrl = buildProxy(feedUrl);
                 try {
+                    const res = await withTimeout(fetch(proxyUrl), timeoutMs);
+                    if (!res.ok) continue;
 
-                    const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), 7000);
+                    let text = await withTimeout(res.text(), timeoutMs);
 
-                    const targetUrl =
-                        proxyUrl + encodeURIComponent(feed.url.trim());
-
-                    console.log("Fetching:", targetUrl);
-
-                    const response = await fetch(targetUrl, {
-                        method: "GET",
-                        signal: controller.signal,
-                        headers: {
-                            "Accept":
-                                "application/rss+xml, application/xml, text/xml"
-                        }
-                    });
-
-                    clearTimeout(timeout);
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error: ${response.status}`);
-                    }
-
-                    let text = await response.text();
-
-                    // Handle JSON proxy wrappers
+                    // allorigins wraps response in JSON: { contents: "..." }
                     try {
                         const json = JSON.parse(text);
+                        if (json.contents) text = json.contents;
+                        else if (json.data) text = json.data;
+                    } catch (_) { /* raw XML — fine */ }
 
-                        if (json.contents) {
-                            text = json.contents;
-                        }
+                    const xml = new DOMParser().parseFromString(text, 'application/xml');
+                    if (xml.querySelector('parsererror')) continue;
 
-                        if (json.data) {
-                            text = json.data;
-                        }
-                    } catch (_) {}
+                    const items = xml.querySelectorAll('item');
+                    if (!items.length) continue;
 
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(
-                        text,
-                        "application/xml"
-                    );
+                    return items; // ✓ success
+                } catch (e) {
+                    console.warn(`Proxy failed for ${feedUrl}:`, e.message);
+                }
+            }
+            return null; // all proxies exhausted
+        }
 
-                    if (xmlDoc.querySelector("parsererror")) {
-                        throw new Error("XML parsing error");
-                    }
+        // ─── Helpers ──────────────────────────────────────────────────────────────
+        function sanitize(str) {
+            return (str || '')
+                .replace(/<[^>]+>/g, '')
+                .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
+                .trim();
+        }
 
-                    const items = xmlDoc.querySelectorAll("item");
+        function formatDate(str) {
+            if (!str) return 'Date inconnue';
+            const d = new Date(str);
+            return isNaN(d) ? str : d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+        }
 
-                    if (!items.length) {
-                        throw new Error("No RSS items found");
-                    }
+        function buildCard(article) {
+            const card = document.createElement('a');
+            card.href   = article.link;
+            card.target = '_blank';
+            card.rel    = 'noopener noreferrer';
+            card.className = 'veille-card p-6 rounded-2xl';
+            const desc = sanitize(article.description).substring(0, 120) + '…';
+            card.innerHTML = `
+                <div class="flex items-center gap-3 mb-4 flex-wrap">
+                    <span class="source-badge">${article.source}</span>
+                    <span class="text-sm text-gray-400">${formatDate(article.pubDate)}</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">${sanitize(article.title) || 'Sans titre'}</h3>
+                <p class="text-gray-400 mb-4">${desc}</p>
+                <div class="flex flex-wrap gap-2">
+                    ${article.tags.map(t => `<span class="px-3 py-1 rounded-full bg-purple-500/20 text-sm">${t}</span>`).join('')}
+                </div>`;
+            return card;
+        }
 
-                    Array.from(items).forEach(item => {
+        // ─── Main fetch ───────────────────────────────────────────────────────────
+        async function fetchRSSFeed() {
+            const container = document.getElementById('rss-feed');
+            container.innerHTML = `<div class="rss-loading"><div class="spinner"></div><span>Chargement des flux RSS…</span></div>`;
 
-                        const title =
-                            item.querySelector("title")?.textContent?.trim() ||
-                            "Sans titre";
+            const seen     = new Set();
+            const articles = [];
 
-                        const link =
-                            item.querySelector("link")?.textContent?.trim() ||
-                            "#";
+            const results = await Promise.allSettled(
+                RSS_FEEDS.map(feed => fetchWithProxy(feed.url).then(items => ({ items, feed })))
+            );
 
-                        const pubDate =
-                            item.querySelector("pubDate")?.textContent?.trim() ||
-                            "Date inconnue";
-
-                        const description =
-                            item.querySelector("description")?.textContent?.trim() ||
-                            "Aucune description";
-
-                        // Prevent duplicates
-                        if (!allArticles.some(article => article.link === link)) {
-
-                            allArticles.push({
-                                title,
-                                link,
-                                pubDate,
-                                description,
-                                source: feed.source,
-                                tags: feed.tags
-                            });
-                        }
+            for (const result of results) {
+                if (result.status !== 'fulfilled' || !result.value.items) continue;
+                const { items, feed } = result.value;
+                for (const item of items) {
+                    const link = item.querySelector('link')?.textContent?.trim() || '';
+                    if (!link || seen.has(link)) continue;
+                    seen.add(link);
+                    articles.push({
+                        title:       item.querySelector('title')?.textContent?.trim()       || 'Sans titre',
+                        link,
+                        pubDate:     item.querySelector('pubDate')?.textContent?.trim()     || '',
+                        description: item.querySelector('description')?.textContent?.trim() || '',
+                        source:      feed.source,
+                        tags:        feed.tags,
                     });
-
-                    console.log(
-                        `Success with ${proxyUrl} for ${feed.source}`
-                    );
-
-                    success = true;
-                    break;
-
-                } catch (error) {
-
-                    console.warn(
-                        `Attempt ${attempt + 1} with proxy ${proxyUrl} for ${feed.source} failed:`,
-                        error.message
-                    );
                 }
             }
 
-            if (!success && attempt < retries - 1) {
-                await new Promise(resolve => setTimeout(resolve, delay));
+            articles.sort((a, b) => (Date.parse(b.pubDate) || 0) - (Date.parse(a.pubDate) || 0));
+            container.innerHTML = '';
+
+            if (!articles.length) {
+                container.innerHTML = `
+                    <div class="rss-error">
+                        <p class="mb-4">Impossible de charger les flux RSS. Vérifiez votre connexion ou réessayez.</p>
+                        <button class="retry-btn" onclick="fetchRSSFeed()">↺ Réessayer</button>
+                    </div>`;
+                return;
             }
+
+            articles.slice(0, 6).forEach((article, i) => {
+                const card = buildCard(article);
+                container.appendChild(card);
+                gsap.from(card, {
+                    scrollTrigger: { trigger: card, start: 'top bottom-=80' },
+                    opacity: 0, y: 50, duration: 0.7, ease: 'power3.out', delay: i * 0.08,
+                });
+            });
         }
-    }
 
-    // Sort articles by date
-    allArticles.sort((a, b) => {
-
-        const parsedA = Date.parse(a.pubDate);
-        const parsedB = Date.parse(b.pubDate);
-
-        const dateA = !isNaN(parsedA)
-            ? parsedA
-            : 0;
-
-        const dateB = !isNaN(parsedB)
-            ? parsedB
-            : 0;
-
-        return dateB - dateA;
-    });
-
-    feedContainer.innerHTML = "";
-
-    allArticles.slice(0, 6).forEach((article, index) => {
-
-        // Sanitize content
-        const safeTitle = article.title
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
-
-        const safeDescription = article.description
-            .replace(/<[^>]+>/g, "")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
-
-        const descText =
-            safeDescription.substring(0, 120) + "...";
-
-        const formattedDate =
-            article.pubDate !== "Date inconnue"
-                ? new Date(article.pubDate).toLocaleDateString("fr-FR", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric"
-                })
-                : "Date inconnue";
-
-        const card = document.createElement("a");
-
-        card.href = article.link;
-        card.target = "_blank";
-        card.rel = "noopener noreferrer";
-
-        card.className =
-            "veille-card p-6 rounded-2xl";
-
-        card.innerHTML = `
-            <div class="flex items-center gap-3 mb-4">
-                <span class="source-badge">${article.source}</span>
-                <span class="text-sm text-gray-400">${formattedDate}</span>
-            </div>
-
-            <h3 class="text-xl font-bold mb-3">
-                ${safeTitle}
-            </h3>
-
-            <p class="text-gray-400 mb-4">
-                ${descText}
-            </p>
-
-            <div class="flex flex-wrap gap-2">
-                ${article.tags.map(tag => `
-                    <span class="px-3 py-1 rounded-full bg-purple-500/20 text-sm">
-                        ${tag}
-                    </span>
-                `).join("")}
-            </div>
-        `;
-
-        feedContainer.appendChild(card);
-
-        // GSAP Animation
-        gsap.from(card, {
-            scrollTrigger: {
-                trigger: card,
-                start: "top bottom-=100"
-            },
-            opacity: 0,
-            y: 60,
-            duration: 0.8,
-            ease: "power3.out",
-            delay: index * 0.1
-        });
-    });
-
-    if (allArticles.length === 0) {
-
-        feedContainer.innerHTML = `
-            <p class="rss-error col-span-full">
-                Erreur lors du chargement des flux RSS.
-                Veuillez réessayer.
-
-                <button
-                    class="retry-btn mt-4"
-                    onclick="fetchRSSFeed()"
-                >
-                    Réessayer
-                </button>
-            </p>
-        `;
-    }
-}
-
-        // Run on page load
+        // ─── Init ─────────────────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
+            animateCards('#curated-articles .veille-card');
+            animateCards('#tools-grid .tool-card', { y: 0, scale: 0.85 });
             fetchRSSFeed();
-            document.querySelectorAll('.veille-card').forEach((card, index) => {
-                gsap.from(card, {
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top bottom-=100'
-                    },
-                    opacity: 0,
-                    y: 60,
-                    duration: 0.8,
-                    ease: 'power3.out',
-                    delay: index * 0.1
-                });
-            });
-
-            document.querySelectorAll('.tool-card').forEach((card, index) => {
-                gsap.from(card, {
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top bottom-=100'
-                    },
-                    opacity: 0,
-                    scale: 0.8,
-                    duration: 0.6,
-                    ease: 'back.out(1.7)',
-                    delay: index * 0.1
-                });
-            });
         });
     </script>
 </body>
