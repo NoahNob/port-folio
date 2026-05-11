@@ -224,146 +224,251 @@
     </div>
 
     <script>
-        // RSS Feed Configuration
-        const rssFeeds = [
-            {
-                url: 'https://machinelearningmastery.com/blog/feed/',
-                source: 'MachineLearningMastery.com',
-                tags: ['IA', 'Machine Learning']
-            },
-            {
-                url: 'https://www.technologyreview.com/topic/artificial-intelligence/feed/',
-                source: 'MIT',
-                tags: ['IA', 'News']
-            },
-            {
-                url: 'https://bair.berkeley.edu/blog/feed/',
-                source: 'Université de Berkeley',
-                tags: ['IA', 'Nouvelles technologies']
-            },
-            {
-                url: 'https://veille.portail-rgpd.com/veille/ssi/feed/',
-                source: 'Portail-RGPD',
-                tags: ['Cybersécurité', 'RGPD']
-            }
-        ];
-
         // RSS Feed Fetching with Retry
-        async function fetchRSSFeed(retries = 1, delay = 1000) {
-            const proxyUrls = [
-              "https://everyorigin.deno.dev/?url=",
-              "https://cors.lol/?url=",
-              "https://cors.x2u.in/?url=",
-              "https://test.cors.workers.dev/?url=",
-              "https://corsproxy.org/?",
-              "https://cors.utilitytool.app/?url=",
-              "https://www.thebugging.com/apis/cors-proxy/?url=",
-              "https://cors-anywhere.com/",
-              "https://whateverorigin.org/get?url="
-            ];
-            const feedContainer = document.getElementById('rss-feed');
-            let allArticles = [];
+async function fetchRSSFeed(retries = 1, delay = 1000) {
+    const proxyUrls = [
+        "https://everyorigin.deno.dev/?url=",
+        "https://cors.lol/?url=",
+        "https://cors.x2u.in/?url=",
+        "https://test.cors.workers.dev/?url=",
+        "https://cors.utilitytool.app/?url=",
+        "https://www.thebugging.com/apis/cors-proxy/?url="
+    ];
 
-            for (const feed of rssFeeds) {
-                for (let attempt = 0; attempt < retries; attempt++) {
-                    for (const proxyUrl of proxyUrls) {
-                        try {
-                            const response = await fetch(proxyUrl + encodeURIComponent(feed.url), {
-                                headers: { 'Accept': 'application/rss+xml' }
-                            });
+    const feedContainer = document.getElementById('rss-feed');
+    let allArticles = [];
 
-                            if (!response.ok) {
-                                throw new Error(`HTTP error: ${response.status}`);
-                            }
+    for (const feed of rssFeeds) {
 
-                            const text = await response.text();
-                            const parser = new DOMParser();
-                            const xmlDoc = parser.parseFromString(text, 'application/xml');
+        if (!feed.url) {
+            console.warn("Missing feed URL:", feed);
+            continue;
+        }
 
-                            if (xmlDoc.querySelector('parsererror')) {
-                                throw new Error('XML parsing error');
-                            }
+        let success = false;
 
-                            const items = xmlDoc.querySelectorAll('item');
-                            Array.from(items).forEach(item => {
-                                allArticles.push({
-                                    title: item.querySelector('title')?.textContent || 'Sans titre',
-                                    link: item.querySelector('link')?.textContent || '#',
-                                    pubDate: item.querySelector('pubDate')?.textContent || 'Date inconnue',
-                                    description: item.querySelector('description')?.textContent || 'Aucune description',
-                                    source: feed.source,
-                                    tags: feed.tags
-                                });
-                            });
+        for (let attempt = 0; attempt < retries && !success; attempt++) {
 
-                            break; // Success, move to next feed
-                        } catch (error) {
-                            console.warn(`Attempt ${attempt + 1} with proxy ${proxyUrl} for ${feed.source} failed:`, error);
+            for (const proxyUrl of proxyUrls) {
+
+                try {
+
+                    const controller = new AbortController();
+                    const timeout = setTimeout(() => controller.abort(), 7000);
+
+                    const targetUrl =
+                        proxyUrl + encodeURIComponent(feed.url.trim());
+
+                    console.log("Fetching:", targetUrl);
+
+                    const response = await fetch(targetUrl, {
+                        method: "GET",
+                        signal: controller.signal,
+                        headers: {
+                            "Accept":
+                                "application/rss+xml, application/xml, text/xml"
                         }
+                    });
+
+                    clearTimeout(timeout);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error: ${response.status}`);
                     }
 
-                    if (attempt < retries - 1) {
-                        await new Promise(resolve => setTimeout(resolve, delay));
+                    let text = await response.text();
+
+                    // Handle JSON proxy wrappers
+                    try {
+                        const json = JSON.parse(text);
+
+                        if (json.contents) {
+                            text = json.contents;
+                        }
+
+                        if (json.data) {
+                            text = json.data;
+                        }
+                    } catch (_) {}
+
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(
+                        text,
+                        "application/xml"
+                    );
+
+                    if (xmlDoc.querySelector("parsererror")) {
+                        throw new Error("XML parsing error");
                     }
+
+                    const items = xmlDoc.querySelectorAll("item");
+
+                    if (!items.length) {
+                        throw new Error("No RSS items found");
+                    }
+
+                    Array.from(items).forEach(item => {
+
+                        const title =
+                            item.querySelector("title")?.textContent?.trim() ||
+                            "Sans titre";
+
+                        const link =
+                            item.querySelector("link")?.textContent?.trim() ||
+                            "#";
+
+                        const pubDate =
+                            item.querySelector("pubDate")?.textContent?.trim() ||
+                            "Date inconnue";
+
+                        const description =
+                            item.querySelector("description")?.textContent?.trim() ||
+                            "Aucune description";
+
+                        // Prevent duplicates
+                        if (!allArticles.some(article => article.link === link)) {
+
+                            allArticles.push({
+                                title,
+                                link,
+                                pubDate,
+                                description,
+                                source: feed.source,
+                                tags: feed.tags
+                            });
+                        }
+                    });
+
+                    console.log(
+                        `Success with ${proxyUrl} for ${feed.source}`
+                    );
+
+                    success = true;
+                    break;
+
+                } catch (error) {
+
+                    console.warn(
+                        `Attempt ${attempt + 1} with proxy ${proxyUrl} for ${feed.source} failed:`,
+                        error.message
+                    );
                 }
             }
 
-            // Sort articles by date (newest first) and limit to 6
-            allArticles.sort((a, b) => {
-                const dateA = a.pubDate !== 'Date inconnue' ? new Date(a.pubDate) : new Date(0);
-                const dateB = b.pubDate !== 'Date inconnue' ? new Date(b.pubDate) : new Date(0);
-                return dateB - dateA;
-            });
-
-            feedContainer.innerHTML = '';
-            allArticles.slice(0, 6).forEach((article, index) => {
-                const descText = article.description.replace(/<[^>]+>/g, '').substring(0, 120) + '...';
-                const formattedDate = article.pubDate !== 'Date inconnue' ? new Date(article.pubDate).toLocaleDateString('fr-FR', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                }) : 'Date inconnue';
-
-                const card = document.createElement('a');
-                card.href = article.link;
-                card.target = '_blank';
-                card.className = 'veille-card p-6 rounded-2xl';
-                card.innerHTML = `
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="source-badge">${article.source}</span>
-                        <span class="text-sm text-gray-400">${formattedDate}</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">${article.title}</h3>
-                    <p class="text-gray-400 mb-4">${descText}</p>
-                    <div class="flex flex-wrap gap-2">
-                        ${article.tags.map(tag => `<span class="px-3 py-1 rounded-full bg-purple-500/20 text-sm">${tag}</span>`).join('')}
-                    </div>
-                `;
-
-                feedContainer.appendChild(card);
-
-                // GSAP Animation
-                gsap.from(card, {
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top bottom-=100'
-                    },
-                    opacity: 0,
-                    y: 60,
-                    duration: 0.8,
-                    ease: 'power3.out',
-                    delay: index * 0.1
-                });
-            });
-
-            if (allArticles.length === 0) {
-                feedContainer.innerHTML = `
-                    <p class="rss-error col-span-full">
-                        Erreur lors du chargement des flux RSS. Veuillez réessayer.
-                        <button class="retry-btn mt-4" onclick="fetchRSSFeed()">Réessayer</button>
-                    </p>`;
+            if (!success && attempt < retries - 1) {
+                await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
+    }
+
+    // Sort articles by date
+    allArticles.sort((a, b) => {
+
+        const parsedA = Date.parse(a.pubDate);
+        const parsedB = Date.parse(b.pubDate);
+
+        const dateA = !isNaN(parsedA)
+            ? parsedA
+            : 0;
+
+        const dateB = !isNaN(parsedB)
+            ? parsedB
+            : 0;
+
+        return dateB - dateA;
+    });
+
+    feedContainer.innerHTML = "";
+
+    allArticles.slice(0, 6).forEach((article, index) => {
+
+        // Sanitize content
+        const safeTitle = article.title
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+        const safeDescription = article.description
+            .replace(/<[^>]+>/g, "")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+        const descText =
+            safeDescription.substring(0, 120) + "...";
+
+        const formattedDate =
+            article.pubDate !== "Date inconnue"
+                ? new Date(article.pubDate).toLocaleDateString("fr-FR", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric"
+                })
+                : "Date inconnue";
+
+        const card = document.createElement("a");
+
+        card.href = article.link;
+        card.target = "_blank";
+        card.rel = "noopener noreferrer";
+
+        card.className =
+            "veille-card p-6 rounded-2xl";
+
+        card.innerHTML = `
+            <div class="flex items-center gap-3 mb-4">
+                <span class="source-badge">${article.source}</span>
+                <span class="text-sm text-gray-400">${formattedDate}</span>
+            </div>
+
+            <h3 class="text-xl font-bold mb-3">
+                ${safeTitle}
+            </h3>
+
+            <p class="text-gray-400 mb-4">
+                ${descText}
+            </p>
+
+            <div class="flex flex-wrap gap-2">
+                ${article.tags.map(tag => `
+                    <span class="px-3 py-1 rounded-full bg-purple-500/20 text-sm">
+                        ${tag}
+                    </span>
+                `).join("")}
+            </div>
+        `;
+
+        feedContainer.appendChild(card);
+
+        // GSAP Animation
+        gsap.from(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: "top bottom-=100"
+            },
+            opacity: 0,
+            y: 60,
+            duration: 0.8,
+            ease: "power3.out",
+            delay: index * 0.1
+        });
+    });
+
+    if (allArticles.length === 0) {
+
+        feedContainer.innerHTML = `
+            <p class="rss-error col-span-full">
+                Erreur lors du chargement des flux RSS.
+                Veuillez réessayer.
+
+                <button
+                    class="retry-btn mt-4"
+                    onclick="fetchRSSFeed()"
+                >
+                    Réessayer
+                </button>
+            </p>
+        `;
+    }
+}
 
         // Run on page load
         document.addEventListener('DOMContentLoaded', () => {
