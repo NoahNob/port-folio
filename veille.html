@@ -251,11 +251,15 @@
         // RSS Feed Fetching with Retry
         async function fetchRSSFeed(retries = 1, delay = 1000) {
             const proxyUrls = [
-              "https://api.codetabs.com/v1/proxy?quest=", 
-              "https://test.cors.workers.dev/?url=", 
-              "https://yacdn.org/proxy/", 
-              "https://www.whateverorigin.org/get?url=", 
-              "https://corsproxy-8uo5.onrender.com/?url=", 
+              "https://everyorigin.deno.dev/?url=",
+              "https://cors.lol/?url=",
+              "https://cors.x2u.in/?url=",
+              "https://test.cors.workers.dev/?url=",
+              "https://corsproxy.org/?",
+              "https://cors.utilitytool.app/?url=",
+              "https://www.thebugging.com/apis/cors-proxy/?url=",
+              "https://cors-anywhere.com/",
+              "https://whateverorigin.org/get?url="
             ];
             const feedContainer = document.getElementById('rss-feed');
             let allArticles = [];
